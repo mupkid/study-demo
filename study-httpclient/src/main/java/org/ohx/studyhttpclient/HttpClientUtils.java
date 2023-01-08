@@ -1,14 +1,14 @@
 package org.ohx.studyhttpclient;
 
 import com.alibaba.fastjson2.JSONObject;
-import org.apache.http.HeaderElement;
-import org.apache.http.HeaderElementIterator;
-import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
+import org.apache.http.*;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.HttpRequestRetryHandler;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.ConnectTimeoutException;
 import org.apache.http.conn.ConnectionKeepAliveStrategy;
 import org.apache.http.conn.socket.ConnectionSocketFactory;
 import org.apache.http.conn.socket.PlainConnectionSocketFactory;
@@ -18,12 +18,13 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicHeaderElementIterator;
 import org.apache.http.protocol.HTTP;
-import org.apache.http.protocol.HttpContext;
 import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
+import java.io.InterruptedIOException;
+import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -41,8 +42,9 @@ public final class HttpClientUtils {
     static {
         httpClient = HttpClients.custom()
             .setConnectionManager(buildPoolConnectionManager())
-//            .setKeepAliveStrategy(myStrategy)
+            .setKeepAliveStrategy(buildConnectionKeepAliveStrategy())
             .setDefaultRequestConfig(buildRequestConfig())
+            .setRetryHandler(buildHttpRequestRetryHandler())
             .build();
     }
 
@@ -104,9 +106,9 @@ public final class HttpClientUtils {
     /**
      * 维持连接策略
      */
-    private static final ConnectionKeepAliveStrategy myStrategy = new ConnectionKeepAliveStrategy() {
-        @Override
-        public long getKeepAliveDuration(HttpResponse httpResponse, HttpContext httpContext) {
+    private static ConnectionKeepAliveStrategy buildConnectionKeepAliveStrategy() {
+//        return new DefaultConnectionKeepAliveStrategy();
+        return (httpResponse, httpContext) -> {
             HeaderElementIterator it = new BasicHeaderElementIterator(
                 httpResponse.headerIterator(HTTP.CONN_KEEP_ALIVE));
             while (it.hasNext()) {
@@ -120,6 +122,38 @@ public final class HttpClientUtils {
 
             // 如果没有约定，则默认定义时长60s
             return 60 * 1000;
-        }
-    };
+        };
+    }
+
+    /**
+     * 重试策略
+     */
+    private static HttpRequestRetryHandler buildHttpRequestRetryHandler() {
+//        return new DefaultHttpRequestRetryHandler();
+        return (exception, executionCount, context) -> {
+            if (executionCount > 3) {
+                return false;
+            }
+
+            if (exception instanceof NoHttpResponseException) {
+                return true;
+            }
+
+            if (exception instanceof ConnectTimeoutException) {
+                return false;
+            }
+
+            if (exception instanceof InterruptedIOException) {
+                return false;
+            }
+
+            if (exception instanceof UnknownHostException) {
+                return false;
+            }
+
+            HttpClientContext httpClientContext = HttpClientContext.adapt(context);
+            HttpRequest request = httpClientContext.getRequest();
+            return !(request instanceof HttpEntityEnclosingRequest);
+        };
+    }
 }

@@ -17,7 +17,7 @@ HttpClient httpClient = HttpClients.createDefault();
 包括在网上很多工具类 HttpClientUtils 文章都会在方法内用这种方法创建实例。
 
 但是创建一个 HttpClient 是很耗时的，且 HttpClient 是线程安全的，程序中只使用一个即可。
-而且在实际工作中，我们需要根据业务场景对 HttpClient 进行调优。
+而且在实际工作中，我们需要根据业务场景对 HttpClient 进行调优，因此更常用下面这种方式。
 
 ```java
 HttpClients.custom()
@@ -29,8 +29,6 @@ HttpClients.custom()
 
 
 ## PoolingHttpClientConnectionManager
-
-
 
 | 参数               | 作用                           |
 | ------------------ | ------------------------------ |
@@ -47,4 +45,3 @@ HttpClients.custom()
 | connectionRequestTimeout | 从连接池中获取连接的超时时间，单位毫秒     |
 | connectTimeout           | 客户端与服务器建立连接的超时时间，单位毫秒 |
 | socketTimeout            | 两次数据包的最大相隔时间，单位毫秒         |
-

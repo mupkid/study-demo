@@ -7,5 +7,3 @@
 [JUnit 4 Github](https://github.com/junit-team/junit4)
 
 [Mockito](https://github.com/mockito/mockito)
-
-[JUnit 5 教程 之 基础篇](https://www.jianshu.com/p/3183fb69fd74)

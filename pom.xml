@@ -11,6 +11,7 @@
     <modules>
         <module>study-httpclient</module>
         <module>study-dt</module>
+        <module>study-mapstruct</module>
     </modules>
 
     <properties>

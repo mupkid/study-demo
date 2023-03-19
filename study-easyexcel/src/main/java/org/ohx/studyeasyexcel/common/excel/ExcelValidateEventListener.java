@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 注意：不能交给Spring管理
+ *
  * @author mudkip
  * @date 2023/3/18
  */
 public class ExcelValidateEventListener<T> extends AnalysisEventListener<T> {
-    private Class<T> clazz;
-
     private final ExcelValidator<T> excelValidator;
 
     private final List<T> cacheList = new ArrayList<>();

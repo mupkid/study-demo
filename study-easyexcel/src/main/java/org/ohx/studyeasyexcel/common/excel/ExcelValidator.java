@@ -1,5 +1,6 @@
 package org.ohx.studyeasyexcel.common.excel;
 
+import com.alibaba.excel.util.StringUtils;
 import org.ohx.studyeasyexcel.common.validate.Excel;
 
 import javax.validation.ConstraintViolation;
@@ -20,7 +21,7 @@ public class ExcelValidator<T> {
 
     private final int beginIndex;
 
-    private final String errorMessageTemplate = "第{}行：{}";
+    private final String errorMessageTemplate = "第{0}行：{1}";
 
     public ExcelValidator(Validator validator, int beginIndex) {
         this.validator = validator;
@@ -32,7 +33,7 @@ public class ExcelValidator<T> {
         int index = beginIndex + 1;
         for (T data : dataList) {
             String errorMessage = this.doValidate(index, data);
-            if (errorMessage.isEmpty()) {
+            if (StringUtils.isNotBlank(errorMessage)) {
                 errorMessageList.add(errorMessage);
             }
             index++;

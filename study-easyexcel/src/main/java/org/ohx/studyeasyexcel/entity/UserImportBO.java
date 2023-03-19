@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
 /**
@@ -21,6 +22,7 @@ public class UserImportBO {
     @ExcelProperty("姓名*")
     private String username;
 
+    @NotNull(groups = {Excel.class})
     @Positive(groups = {Excel.class})
     @ExcelProperty("年龄*")
     private Integer age;

@@ -19,7 +19,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Constraint(validatedBy = {EnumValidator.class})
 public @interface Enum {
-    String message() default "{javax.validation.constraints.Digits.message}";
+    String message() default "{javax.validation.constraints.NotInEnum.message}";
 
     Class<?>[] groups() default {};
 

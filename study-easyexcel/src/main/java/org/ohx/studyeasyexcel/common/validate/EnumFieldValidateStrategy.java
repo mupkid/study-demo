@@ -33,7 +33,7 @@ public class EnumFieldValidateStrategy implements EnumValidateStrategy {
     }
 
     @Override
-    public boolean isThis(EnumValidMode enumValidMode) {
+    public boolean canValidate(EnumValidMode enumValidMode) {
         return false;
     }
 }

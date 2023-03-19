@@ -7,5 +7,5 @@ package org.ohx.studyeasyexcel.common.validate;
 public interface EnumValidateStrategy {
     boolean doValidate(Object value, String fieldName, Class<? extends java.lang.Enum<?>> enumClass) throws Exception;
 
-    boolean isThis(EnumValidMode enumValidMode);
+    boolean canValidate(EnumValidMode enumValidMode);
 }

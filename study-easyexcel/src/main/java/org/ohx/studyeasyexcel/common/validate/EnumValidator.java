@@ -38,7 +38,7 @@ public class EnumValidator implements ConstraintValidator<Enum, Object> {
         }
 
         for (EnumValidateStrategy strategy : strategies) {
-            if (strategy.isThis(enumValidMode)) {
+            if (strategy.canValidate(enumValidMode)) {
                 try {
                     strategy.doValidate(value, fieldName, enumClass);
                 } catch (Exception e) {

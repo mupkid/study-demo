@@ -12,6 +12,7 @@
         <module>study-httpclient</module>
         <module>study-dt</module>
         <module>study-mapstruct</module>
+        <module>study-easyexcel</module>
     </modules>
 
     <properties>
